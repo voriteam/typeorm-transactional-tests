@@ -1,14 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.wrap = void 0;
-var release;
 var wrap = function (originalQueryRunner) {
-    release = originalQueryRunner.release;
+    var originalRelease = originalQueryRunner.release.bind(originalQueryRunner);
     originalQueryRunner.release = function () {
         return Promise.resolve();
     };
     originalQueryRunner.releaseQueryRunner = function () {
-        originalQueryRunner.release = release;
+        originalQueryRunner.release = originalRelease;
         return originalQueryRunner.release();
     };
     return originalQueryRunner;

@@ -65,6 +65,7 @@ var TransactionalTestContext = /** @class */ (function () {
                         return [3 /*break*/, 6];
                     case 4:
                         error_1 = _a.sent();
+                        this.restoreQueryRunnerCreation();
                         return [4 /*yield*/, this.cleanUpResources()];
                     case 5:
                         _a.sent();
@@ -80,6 +81,7 @@ var TransactionalTestContext = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (!this.queryRunner) {
+                            this.restoreQueryRunnerCreation();
                             throw new Error('Context not started. You must call "start" before finishing it.');
                         }
                         _a.label = 1;
@@ -88,9 +90,10 @@ var TransactionalTestContext = /** @class */ (function () {
                         return [4 /*yield*/, this.queryRunner.rollbackTransaction()];
                     case 2:
                         _a.sent();
-                        this.restoreQueryRunnerCreation();
                         return [3 /*break*/, 5];
-                    case 3: return [4 /*yield*/, this.cleanUpResources()];
+                    case 3:
+                        this.restoreQueryRunnerCreation();
+                        return [4 /*yield*/, this.cleanUpResources()];
                     case 4:
                         _a.sent();
                         return [7 /*endfinally*/];

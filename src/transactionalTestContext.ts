@@ -18,6 +18,7 @@ export default class TransactionalTestContext {
       await this.queryRunner.connect();
       await this.queryRunner.startTransaction();
     } catch (error) {
+      this.restoreQueryRunnerCreation();
       await this.cleanUpResources();
       throw error;
     }
@@ -25,12 +26,13 @@ export default class TransactionalTestContext {
 
   async finish(): Promise<void> {
     if (!this.queryRunner) {
+      this.restoreQueryRunnerCreation();
       throw new Error('Context not started. You must call "start" before finishing it.');
     }
     try {
       await this.queryRunner.rollbackTransaction();
-      this.restoreQueryRunnerCreation();
     } finally {
+      this.restoreQueryRunnerCreation();
       await this.cleanUpResources();
     }
   }
