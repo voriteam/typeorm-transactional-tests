@@ -8,16 +8,14 @@ interface QueryRunnerWrapper extends QueryRunner {
   releaseQueryRunner(): Promise<void>;
 }
 
-let release: () => Promise<void>;
-
 const wrap = (originalQueryRunner: QueryRunner): QueryRunnerWrapper => {
-  release = originalQueryRunner.release;
+  const originalRelease = originalQueryRunner.release.bind(originalQueryRunner);
   originalQueryRunner.release = () => {
     return Promise.resolve();
   };
 
   (originalQueryRunner as QueryRunnerWrapper).releaseQueryRunner = () => {
-    originalQueryRunner.release = release;
+    originalQueryRunner.release = originalRelease;
     return originalQueryRunner.release();
   };
 
